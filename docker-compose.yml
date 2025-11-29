@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: playwright-tests
+    volumes:
+      # монтируем для возможности изменений без пересборки
+      - .:/app
+      # монтируем отчеты
+      - ./reports:/app/reports
+      # монтируем скриншоты
+      - ./screenshots:/app/screenshots
+    environment:
+      # переменные окружения для тестов
+      - PYTHONUNBUFFERED=1
+    # команда запуска тестов
+    command: pytest -v --html=reports/report.html --self-contained-html
+
