@@ -56,15 +56,15 @@ class PaymentProcessingPage(BasePage):
         ожидание обработки оплаты и перехода на страницу спасибо
         после submit_payment редирект на 3DS, нажимаем кнопку успех, редирект на спасибо
         """
-        # Ждем появления страницы 3DS
+        # ждем появления страницы 3DS
         self.page.wait_for_url("**acs.cloudpayments.ru**", timeout=30000)
         
-        # Ждем загрузки страницы
+        # ждем загрузки страницы
         self.page.wait_for_load_state("networkidle", timeout=10000)
         
-        # Нажимаем кнопку "Успех" на странице 3DS
+        # нажимаем кнопку "Успех" на странице 3DS
         self.wait_for_element(self.SUCCESS_BUTTON_3DS)
-        # Ожидаем навигацию на страницу "Спасибо" после клика
+        # ожидаем навигацию на страницу "Спасибо" после клика
         with self.page.expect_navigation(timeout=timeout, url=f"**{THANK_YOU_URL_PATTERN}**"):
             self.click(self.SUCCESS_BUTTON_3DS)
     
@@ -73,19 +73,15 @@ class PaymentProcessingPage(BasePage):
         ожидание обработки оплаты с ошибкой (недостаток средств)
         после submit_payment редирект на 3DS, нажимаем кнопку для ошибки, редирект на /fail
         """
-        # Ждем появления страницы 3DS
+        # ждем появления страницы 3DS
         self.page.wait_for_url("**acs.cloudpayments.ru**", timeout=30000)
-        
-        # Ждем загрузки страницы
         self.page.wait_for_load_state("networkidle", timeout=10000)
-        
-        # Нажимаем кнопку для обработки ошибки на странице 3DS
         self.wait_for_element(self.NEGATIVE_BUTTON_3DS)
-        # Ожидаем навигацию на страницу /fail после клика
+        # ожидамем навигацию на страницу /fail после клика
         with self.page.expect_navigation(timeout=timeout, url="**/fail**"):
             self.click(self.NEGATIVE_BUTTON_3DS)
         
-        # Ждем появления блока с ошибкой на странице /fail
+        # ждем появления блока с ошибкой на странице /fail
         self.wait_for_element(".alert", timeout=10000)
     
     def is_error_message_visible(self) -> bool:
